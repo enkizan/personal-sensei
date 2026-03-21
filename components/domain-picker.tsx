@@ -1,7 +1,6 @@
 'use client'
 import { useApp } from '@/app/context'
 import { DOMAINS, type Domain } from '@/lib/domains'
-import { Button } from '@/components/ui/button'
 import { ChevronDown } from 'lucide-react'
 import { useState } from 'react'
 
@@ -12,14 +11,16 @@ export function DomainPicker() {
 
   return (
     <div className="relative">
-      <Button variant="ghost" className="w-full justify-between px-3 h-10"
-        onClick={() => setOpen(o => !o)}>
+      <button
+        className="flex w-full items-center justify-between h-9 px-3 rounded-md text-sm text-sidebar-foreground/70 hover:bg-sidebar-accent/70 hover:text-sidebar-foreground transition-colors"
+        onClick={() => setOpen(o => !o)}
+      >
         <span className="flex items-center gap-2">
-          <span className="text-lg font-bold">{current.icon}</span>
-          <span className="text-sm font-medium">{current.name}</span>
+          <span className="text-base">{current.icon}</span>
+          <span className="font-medium">{current.name}</span>
         </span>
         <ChevronDown className="h-4 w-4 opacity-50" />
-      </Button>
+      </button>
 
       {open && (
         <div className="absolute top-full left-0 right-0 z-50 mt-1 rounded-lg border bg-card shadow-lg">
