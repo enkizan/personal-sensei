@@ -13,6 +13,7 @@ import { useState } from 'react'
 const BRAND_KANJI: Record<string, string> = {
   japanese: '日',
   english:  'Ｅ',
+  french:   '法',   // 法国 = France in Chinese/Japanese
   math:     '数',
 }
 

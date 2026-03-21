@@ -18,13 +18,13 @@ export function LessonViewer({ lesson, onStartQuiz }: LessonViewerProps) {
   const c = lesson.content
 
   const tabs = [
-    { key: 'content',  label: 'Content',    domains: ['japanese','english','math'] },
-    { key: 'vocab',    label: 'Vocabulary', domains: ['japanese','english'] },
-    { key: 'grammar',  label: 'Grammar',    domains: ['japanese','english'] },
+    { key: 'content',  label: 'Content',    domains: ['japanese','english','french','math'] },
+    { key: 'vocab',    label: 'Vocabulary', domains: ['japanese','english','french'] },
+    { key: 'grammar',  label: 'Grammar',    domains: ['japanese','english','french'] },
     { key: 'concepts', label: 'Concepts',   domains: ['math'] },
     { key: 'worked',   label: 'Examples',   domains: ['math'] },
-    { key: 'notes',    label: 'CN Notes',   domains: ['japanese'] },
-    { key: 'quiz',     label: 'Quiz',       domains: ['japanese','english','math'] },
+    { key: 'notes',    label: 'CN Notes',   domains: ['japanese','french'] },
+    { key: 'quiz',     label: 'Quiz',       domains: ['japanese','english','french','math'] },
   ].filter(t => t.domains.includes(lessonDomain))
 
   return (
@@ -58,7 +58,8 @@ export function LessonViewer({ lesson, onStartQuiz }: LessonViewerProps) {
               <tr className="border-b">
                 <th className="text-left py-2 pr-4">Word</th>
                 {lessonDomain === 'japanese' && <th className="text-left py-2 pr-4">Reading</th>}
-                {lessonDomain === 'english'  && <th className="text-left py-2 pr-4">Pronunciation</th>}
+                {(lessonDomain === 'english' || lessonDomain === 'french') && <th className="text-left py-2 pr-4">Pronunciation</th>}
+                {lessonDomain === 'french'   && <th className="text-left py-2 pr-4">Gender</th>}
                 {lessonDomain === 'japanese' && <th className="text-left py-2 pr-4">中文</th>}
                 <th className="text-left py-2">English</th>
               </tr>
@@ -68,7 +69,9 @@ export function LessonViewer({ lesson, onStartQuiz }: LessonViewerProps) {
               {c.vocabulary?.map((v: any, i: number) => (
                 <tr key={i} className="border-b border-muted">
                   <td className="py-2 pr-4 font-medium">{v.word}</td>
-                  <td className="py-2 pr-4 text-muted-foreground">{v.reading}</td>
+                  {lessonDomain === 'japanese' && <td className="py-2 pr-4 text-muted-foreground">{v.reading}</td>}
+                  {(lessonDomain === 'english' || lessonDomain === 'french') && <td className="py-2 pr-4 text-muted-foreground">{v.reading ?? v.pronunciation}</td>}
+                  {lessonDomain === 'french'   && <td className="py-2 pr-4 text-muted-foreground">{v.gender}</td>}
                   {lessonDomain === 'japanese' && <td className="py-2 pr-4">{v.meaning_zh}</td>}
                   <td className="py-2">{v.meaning_en}</td>
                 </tr>

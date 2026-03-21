@@ -172,6 +172,12 @@
   --ring: oklch(0.52 0.190 247);
 }
 
+[data-domain="french"] {
+  --primary: oklch(0.48 0.170 275);     /* indigo — distinct from English blue */
+  --primary-foreground: oklch(0.985 0 0);
+  --ring: oklch(0.48 0.170 275);
+}
+
 [data-domain="math"] {
   --primary: oklch(0.50 0.150 148);     /* #43A047 green */
   --primary-foreground: oklch(0.985 0 0);
@@ -181,6 +187,7 @@
 /* Dark mode domain overrides — brighter for contrast on dark bg */
 .dark [data-domain="japanese"] { --primary: oklch(0.60 0.180 28); }
 .dark [data-domain="english"]  { --primary: oklch(0.62 0.185 247); }
+.dark [data-domain="french"]   { --primary: oklch(0.62 0.165 275); }
 .dark [data-domain="math"]     { --primary: oklch(0.60 0.145 148); }
 
 /* ── Japanese text ──────────────────────────────────────────────────────── */
