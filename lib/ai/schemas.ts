@@ -4,7 +4,7 @@ import type { Domain } from '@/lib/domains'
 const QuizItem = z.object({
   question:    z.string(),
   options:     z.array(z.string()),   // Anthropic structured output doesn't support minItems > 1
-  answer:      z.number().int(),      // prompt instructs 0-3; .min/.max also rejected
+  answer:      z.number(),             // Anthropic doesn't support integer type or min/max
   explanation: z.string(),
 })
 
