@@ -8,6 +8,7 @@ export async function POST(req: Request) {
   const res = NextResponse.json({ ok: true })
   res.cookies.set('jp_auth', 'granted', {
     httpOnly: true, sameSite: 'strict', maxAge: 604800, path: '/',
+    secure: process.env.NODE_ENV === 'production',
   })
   return res
 }

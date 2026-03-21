@@ -7,8 +7,10 @@ export async function GET(req: Request) {
   const { searchParams } = new URL(req.url)
   const studentId = searchParams.get('student_id')
   if (!studentId) return NextResponse.json({ error: 'student_id required' }, { status: 400 })
+  const numId = parseInt(studentId)
+  if (isNaN(numId)) return NextResponse.json({ error: 'invalid student_id' }, { status: 400 })
   const rows = await db.select().from(progress)
-    .where(eq(progress.student_id, parseInt(studentId)))
+    .where(eq(progress.student_id, numId))
   return NextResponse.json(rows)
 }
 
