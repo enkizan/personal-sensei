@@ -1,5 +1,6 @@
 'use client'
 import { useState, useRef, useEffect } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { TextStreamChatTransport } from 'ai'
 import { useChat } from '@ai-sdk/react'
 import { useApp } from '@/app/context'
@@ -10,7 +11,8 @@ import { Send } from 'lucide-react'
 
 export default function ChatPage() {
   const { currentStudent, domain } = useApp()
-  const [input, setInput] = useState('')
+  const searchParams = useSearchParams()
+  const [input, setInput] = useState(() => searchParams.get('q') ?? '')
 
   // Use refs so the transport callback always reads the latest values
   const domainRef      = useRef(domain)

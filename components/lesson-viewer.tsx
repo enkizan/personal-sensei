@@ -1,8 +1,23 @@
 'use client'
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import { Badge } from '@/components/ui/badge'
-import { ChevronDown, ChevronRight, Sparkles } from 'lucide-react'
+import { ChevronDown, ChevronRight, Sparkles, MessageCircle } from 'lucide-react'
+
+function AskSenseiBtn({ content }: { content: string }) {
+  const router = useRouter()
+  const q = encodeURIComponent(`Please dive deeper and explain: "${content}"`)
+  return (
+    <button
+      onClick={() => router.push(`/chat?q=${q}`)}
+      title="Ask Sensei"
+      className="ml-1.5 inline-flex items-center text-muted-foreground hover:text-primary transition-colors align-middle"
+    >
+      <MessageCircle className="h-3.5 w-3.5" />
+    </button>
+  )
+}
 
 interface LessonViewerProps {
   lesson: {
@@ -99,7 +114,10 @@ export function LessonViewer({ lesson, onStartQuiz, onLessonUpdate }: LessonView
                   {(lessonDomain === 'english' || lessonDomain === 'french') && <td className="py-2 pr-4 text-muted-foreground">{v.reading ?? v.pronunciation}</td>}
                   {lessonDomain === 'french'   && <td className="py-2 pr-4 text-muted-foreground">{v.gender}</td>}
                   {lessonDomain === 'japanese' && <td className="py-2 pr-4">{v.meaning_zh}</td>}
-                  <td className="py-2">{v.meaning_en}</td>
+                  <td className="py-2">
+                    {v.meaning_en}
+                    <AskSenseiBtn content={v.word} />
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -118,9 +136,18 @@ export function LessonViewer({ lesson, onStartQuiz, onLessonUpdate }: LessonView
               <div key={i} className="rounded-lg border">
                 {/* Header — always visible */}
                 <div className="p-4">
-                  <p className="font-semibold text-primary">{g.pattern}</p>
-                  <p className="mt-1 text-sm">{g.explanation}</p>
-                  <p className="mt-2 text-sm text-muted-foreground italic">{g.example}</p>
+                  <p className="font-semibold text-primary">
+                    {g.pattern}
+                    <AskSenseiBtn content={g.pattern} />
+                  </p>
+                  <p className="mt-1 text-sm">
+                    {g.explanation}
+                    <AskSenseiBtn content={g.explanation} />
+                  </p>
+                  <p className="mt-2 text-sm text-muted-foreground italic">
+                    {g.example}
+                    <AskSenseiBtn content={g.example} />
+                  </p>
                 </div>
 
                 {/* Examples section */}
@@ -152,7 +179,10 @@ export function LessonViewer({ lesson, onStartQuiz, onLessonUpdate }: LessonView
                         ? (
                           <ol className="space-y-1.5 text-sm list-decimal list-inside marker:text-muted-foreground">
                             {extraExamples.map((ex, j) => (
-                              <li key={j} className="text-muted-foreground italic">{ex}</li>
+                              <li key={j} className="text-muted-foreground italic">
+                                {ex}
+                                <AskSenseiBtn content={ex} />
+                              </li>
                             ))}
                           </ol>
                         )
