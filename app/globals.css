@@ -128,3 +128,41 @@
     @apply font-sans;
   }
 }
+
+/* ── Domain theming ─────────────────────────────────────────────────────────
+   data-domain is set on the wrapping div in (app)/layout.tsx (SSR) and
+   updated on document.documentElement by AppContext (client-side).
+   Overrides --primary so every shadcn Button/Badge/Ring picks up the accent.
+   Colors are OKLCH equivalents of the original hex values:
+     Japanese red  #C84B31 → oklch(0.52 0.185 28)
+     English  blue #1E88E5 → oklch(0.58 0.190 247)
+     Math    green #43A047 → oklch(0.55 0.150 148)
+──────────────────────────────────────────────────────────────────────────── */
+:root,
+[data-domain="japanese"] {
+  --primary: oklch(0.52 0.185 28);
+  --primary-foreground: oklch(0.985 0 0);
+  --ring: oklch(0.52 0.185 28);
+}
+
+[data-domain="english"] {
+  --primary: oklch(0.58 0.190 247);
+  --primary-foreground: oklch(0.985 0 0);
+  --ring: oklch(0.58 0.190 247);
+}
+
+[data-domain="math"] {
+  --primary: oklch(0.55 0.150 148);
+  --primary-foreground: oklch(0.985 0 0);
+  --ring: oklch(0.55 0.150 148);
+}
+
+/* ── Shake animation (passcode error) ──────────────────────────────────── */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%       { transform: translateX(-8px); }
+  40%       { transform: translateX(8px); }
+  60%       { transform: translateX(-6px); }
+  80%       { transform: translateX(6px); }
+}
+.animate-shake { animation: shake 0.4s ease-in-out; }
