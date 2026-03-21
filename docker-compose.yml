@@ -8,7 +8,7 @@ services:
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: japanese_platform
     ports:
-      - "5434:5432"
+      - "10001:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
@@ -24,7 +24,7 @@ services:
       db:
         condition: service_healthy
     ports:
-      - "3000:3000"
+      - "10002:3000"
     env_file: .env.local          # picks up ANTHROPIC_API_KEY and PASSCODE
     environment:
       # Override DATABASE_URL to use the internal docker network (db:5432)
