@@ -78,9 +78,9 @@ export default function DashboardPage() {
             </Link>
           ))
         }
-        <Button variant="outline" className="mt-2" asChild>
-          <Link href="/lessons">All lessons →</Link>
-        </Button>
+        <Link href="/lessons">
+          <Button variant="outline" className="mt-2">All lessons →</Button>
+        </Link>
       </div>
     </div>
   )

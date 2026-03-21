@@ -1,4 +1,4 @@
-import { streamText } from 'ai'
+import { streamText, convertToModelMessages, type UIMessage } from 'ai'
 import { createAnthropic } from '@ai-sdk/anthropic'
 import { chatSystem } from '@/lib/ai/prompts'
 import type { Domain } from '@/lib/domains'
@@ -13,12 +13,14 @@ export async function POST(req: Request) {
     lessonContext = '',
   } = await req.json()
 
+  const modelMessages = await convertToModelMessages(messages as UIMessage[])
+
   const result = streamText({
-    model:     anthropic('claude-haiku-4-5-20251001'),
-    system:    chatSystem(domain as Domain, studentName, lessonContext),
-    messages,
-    maxTokens: 1024,
+    model:           anthropic('claude-haiku-4-5-20251001'),
+    system:          chatSystem(domain as Domain, studentName, lessonContext),
+    messages:        modelMessages,
+    maxOutputTokens: 1024,
   })
 
-  return result.toDataStreamResponse()
+  return result.toTextStreamResponse()
 }

@@ -1,9 +1,9 @@
 'use client'
-import type { Message } from 'ai'
+import type { UIMessage, TextUIPart } from 'ai'
 import { useApp } from '@/app/context'
 import { DOMAINS } from '@/lib/domains'
 
-interface Props { messages: Message[]; isLoading: boolean }
+interface Props { messages: UIMessage[]; isLoading: boolean }
 
 export function ChatMessages({ messages, isLoading }: Props) {
   const { domain } = useApp()
@@ -29,7 +29,7 @@ export function ChatMessages({ messages, isLoading }: Props) {
               ? 'bg-primary text-primary-foreground rounded-tr-sm'
               : 'bg-muted rounded-tl-sm'
           }`}>
-            {m.content as string}
+            {m.parts.filter((p): p is TextUIPart => p.type === 'text').map(p => p.text).join('')}
           </div>
         </div>
       ))}
