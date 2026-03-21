@@ -40,7 +40,7 @@ export default function LessonPage() {
 
   return (
     <div className="space-y-4">
-      <LessonViewer lesson={lesson} onStartQuiz={() => setQuizMode(true)} />
+      <LessonViewer lesson={lesson} onStartQuiz={() => setQuizMode(true)} onLessonUpdate={setLesson} />
 
       {/* Dive button — sits below the lesson viewer */}
       <div className="max-w-3xl border-t pt-4">

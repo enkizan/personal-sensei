@@ -1,6 +1,8 @@
 'use client'
+import { useState } from 'react'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import { Badge } from '@/components/ui/badge'
+import { ChevronDown, ChevronRight, Sparkles } from 'lucide-react'
 
 interface LessonViewerProps {
   lesson: {
@@ -9,13 +11,37 @@ interface LessonViewerProps {
     content: any
   }
   onStartQuiz: () => void
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  onLessonUpdate?: (updated: any) => void
 }
 
-export function LessonViewer({ lesson, onStartQuiz }: LessonViewerProps) {
-  // Use lesson.domain (DB row), not context domain — so a Japanese lesson visited
-  // while the context domain is "english" still shows the correct tabs (CN Notes, etc.)
+export function LessonViewer({ lesson, onStartQuiz, onLessonUpdate }: LessonViewerProps) {
   const lessonDomain = lesson.domain as string
   const c = lesson.content
+
+  // Track which grammar cards are expanded, and which are generating
+  const [expandedGrammar, setExpandedGrammar] = useState<Set<number>>(new Set())
+  const [generatingGrammar, setGeneratingGrammar] = useState<Set<number>>(new Set())
+
+  async function handleGenerateExamples(grammarIndex: number) {
+    setGeneratingGrammar(prev => new Set(prev).add(grammarIndex))
+    try {
+      const res = await fetch(`/api/lessons/${lesson.id}/grammar-examples`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ grammar_index: grammarIndex }),
+      })
+      if (!res.ok) throw new Error(await res.text())
+      const updated = await res.json()
+      onLessonUpdate?.(updated)
+      // Keep expanded after generating
+      setExpandedGrammar(prev => new Set(prev).add(grammarIndex))
+    } catch (err) {
+      console.error('Failed to generate examples:', err)
+    } finally {
+      setGeneratingGrammar(prev => { const s = new Set(prev); s.delete(grammarIndex); return s })
+    }
+  }
 
   const tabs = [
     { key: 'content',  label: 'Content',    domains: ['japanese','english','french','math'] },
@@ -80,16 +106,76 @@ export function LessonViewer({ lesson, onStartQuiz }: LessonViewerProps) {
           </table>
         </TabsContent>
 
-        {/* Grammar (Japanese / English) */}
+        {/* Grammar (Japanese / English / French) */}
         <TabsContent value="grammar" className="mt-4 space-y-4">
           {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-          {c.grammar_points?.map((g: any, i: number) => (
-            <div key={i} className="rounded-lg border p-4">
-              <p className="font-semibold text-primary">{g.pattern}</p>
-              <p className="mt-1 text-sm">{g.explanation}</p>
-              <p className="mt-2 text-sm text-muted-foreground italic">{g.example}</p>
-            </div>
-          ))}
+          {c.grammar_points?.map((g: any, i: number) => {
+            const extraExamples: string[] = g.examples ?? []
+            const isExpanded  = expandedGrammar.has(i)
+            const isGenerating = generatingGrammar.has(i)
+
+            return (
+              <div key={i} className="rounded-lg border">
+                {/* Header — always visible */}
+                <div className="p-4">
+                  <p className="font-semibold text-primary">{g.pattern}</p>
+                  <p className="mt-1 text-sm">{g.explanation}</p>
+                  <p className="mt-2 text-sm text-muted-foreground italic">{g.example}</p>
+                </div>
+
+                {/* Examples section */}
+                <div className="border-t">
+                  {/* Toggle row */}
+                  <button
+                    onClick={() => setExpandedGrammar(prev => {
+                      const s = new Set(prev)
+                      s.has(i) ? s.delete(i) : s.add(i)
+                      return s
+                    })}
+                    className="flex w-full items-center gap-1.5 px-4 py-2 text-xs text-muted-foreground hover:text-foreground hover:bg-muted/40 transition-colors"
+                  >
+                    {isExpanded
+                      ? <ChevronDown className="h-3.5 w-3.5 shrink-0" />
+                      : <ChevronRight className="h-3.5 w-3.5 shrink-0" />}
+                    Examples
+                    {extraExamples.length > 0 && (
+                      <span className="ml-1 rounded-full bg-muted px-1.5 py-0.5 text-[10px] font-medium">
+                        {extraExamples.length}
+                      </span>
+                    )}
+                  </button>
+
+                  {/* Expanded body */}
+                  {isExpanded && (
+                    <div className="px-4 pb-4 space-y-2">
+                      {extraExamples.length > 0
+                        ? (
+                          <ol className="space-y-1.5 text-sm list-decimal list-inside marker:text-muted-foreground">
+                            {extraExamples.map((ex, j) => (
+                              <li key={j} className="text-muted-foreground italic">{ex}</li>
+                            ))}
+                          </ol>
+                        )
+                        : !isGenerating && (
+                          <p className="text-xs text-muted-foreground">
+                            No extra examples yet. Generate some below.
+                          </p>
+                        )}
+
+                      <button
+                        onClick={() => handleGenerateExamples(i)}
+                        disabled={isGenerating}
+                        className="mt-2 flex items-center gap-1.5 rounded-md border px-3 py-1.5 text-xs font-medium hover:bg-muted/40 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        <Sparkles className={`h-3.5 w-3.5 ${isGenerating ? 'animate-pulse' : ''}`} />
+                        {isGenerating ? 'Generating…' : 'Generate examples'}
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )
+          })}
         </TabsContent>
 
         {/* Concepts (Math) */}
