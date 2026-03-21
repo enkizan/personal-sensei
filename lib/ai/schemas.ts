@@ -3,8 +3,8 @@ import type { Domain } from '@/lib/domains'
 
 const QuizItem = z.object({
   question:    z.string(),
-  options:     z.array(z.string()).length(4),
-  answer:      z.number().int().min(0).max(3),
+  options:     z.array(z.string()),   // Anthropic structured output doesn't support minItems > 1
+  answer:      z.number().int(),      // prompt instructs 0-3; .min/.max also rejected
   explanation: z.string(),
 })
 
