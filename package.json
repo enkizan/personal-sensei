@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "db:push": "dotenv-cli -e .env.local -- drizzle-kit push",
+    "db:push:env": "drizzle-kit push",
     "db:studio": "dotenv-cli -e .env.local -- drizzle-kit studio"
   },
   "dependencies": {
