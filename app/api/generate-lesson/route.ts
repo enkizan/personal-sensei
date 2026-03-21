@@ -14,9 +14,10 @@ export async function POST(req: Request) {
 
   try {
     const { object } = await generateObject({
-      model:  anthropic('claude-sonnet-4-6'),
-      schema: lessonSchema(domain as Domain),
-      prompt: lessonPrompt(domain as Domain, level, chapter, topic),
+      model:           anthropic('claude-sonnet-4-6'),
+      schema:          lessonSchema(domain as Domain),
+      prompt:          lessonPrompt(domain as Domain, level, chapter, topic),
+      maxOutputTokens: 4096,
     })
 
     const rows = await db.insert(lessons).values({
