@@ -24,12 +24,13 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
 
   // Allowlist only mutable fields — never pass raw body to .set()
   const body = await req.json()
-  const { name, email, native_language, domain } = body
+  const { name, email, native_language, domain, home_domain } = body
   const patch: Record<string, unknown> = {}
-  if (name           !== undefined) patch.name            = name
-  if (email          !== undefined) patch.email           = email
+  if (name            !== undefined) patch.name            = name
+  if (email           !== undefined) patch.email           = email
   if (native_language !== undefined) patch.native_language = native_language
-  if (domain         !== undefined) patch.domain          = domain
+  if (domain          !== undefined) patch.domain          = domain
+  if (home_domain     !== undefined) patch.home_domain     = home_domain
   if (Object.keys(patch).length === 0) {
     return NextResponse.json({ error: 'no valid fields to update' }, { status: 400 })
   }
