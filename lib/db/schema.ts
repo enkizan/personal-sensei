@@ -6,6 +6,7 @@ export const students = pgTable('students', {
   email:           text('email'),
   native_language: text('native_language').default('zh'),
   domain:          text('domain').default('japanese'),
+  home_domain:     text('home_domain').default('japanese'),
   created_at:      timestamp('created_at').defaultNow(),
 })
 
