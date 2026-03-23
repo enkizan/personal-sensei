@@ -16,7 +16,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
     initialStudent = rows[0] ?? null
   }
 
-  const initialDomain = (initialStudent?.domain ?? 'japanese') as string
+  const initialDomain = (initialStudent?.home_domain ?? initialStudent?.domain ?? 'japanese') as string
 
   return (
     // Set data-domain server-side so domain CSS variables are correct on first render (no flash)
