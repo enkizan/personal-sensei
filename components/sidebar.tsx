@@ -6,7 +6,7 @@ import { useApp } from '@/app/context'
 import { DomainPicker } from './domain-picker'
 import { StudentPicker } from './student-picker'
 import { DOMAINS } from '@/lib/domains'
-import { Sun, Moon, LayoutDashboard, BookOpen, MessageCircle, BarChart2, Settings } from 'lucide-react'
+import { Sun, Moon, LayoutDashboard, BookOpen, MessageCircle, BarChart2, Settings, Home } from 'lucide-react'
 import { useState } from 'react'
 
 // Kanji badge characters per domain — mirrors the original brand-kanji style
@@ -28,7 +28,7 @@ const NAV = [
 export function Sidebar() {
   const pathname = usePathname()
   const { theme, setTheme } = useTheme()
-  const { currentStudent, domain } = useApp()
+  const { currentStudent, domain, homeDomain, setHomeDomain } = useApp()
   const [pickerOpen, setPickerOpen] = useState(false)
 
   return (
@@ -41,12 +41,27 @@ export function Sidebar() {
           <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-primary text-primary-foreground text-base font-bold font-jp">
             {BRAND_KANJI[domain] ?? DOMAINS[domain].icon}
           </span>
-          <div>
+          <div className="flex-1 min-w-0">
             <div className="text-sm font-semibold leading-none text-sidebar-foreground">
               {DOMAINS[domain].name}
             </div>
             <div className="text-xs text-sidebar-foreground/60 mt-0.5">Learning</div>
           </div>
+          {currentStudent && (
+            <button
+              onClick={() => setHomeDomain(domain)}
+              title={domain === homeDomain ? 'Home domain' : 'Set as home domain'}
+              className="shrink-0 transition-colors"
+            >
+              <Home
+                className={`h-4 w-4 ${
+                  domain === homeDomain
+                    ? 'text-primary fill-primary'
+                    : 'text-sidebar-foreground/30 hover:text-sidebar-foreground/70'
+                }`}
+              />
+            </button>
+          )}
         </div>
         <DomainPicker />
       </div>
