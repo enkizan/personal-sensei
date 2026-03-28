@@ -34,16 +34,17 @@ export default function PasscodePage() {
           <h1 className="text-xl font-semibold">Learning Platform</h1>
           <p className="text-muted-foreground text-sm">Enter the passcode to continue</p>
         </div>
-        <Input
-          type="password"
-          placeholder="Passcode"
-          value={value}
-          onChange={e => { setValue(e.target.value); setError(false) }}
-          onKeyDown={e => e.key === 'Enter' && submit()}
-          className={shake ? 'animate-shake border-destructive' : ''}
-        />
-        {error && <p className="text-destructive text-sm text-center">Incorrect passcode</p>}
-        <Button className="w-full" onClick={submit}>Enter</Button>
+        <form onSubmit={e => { e.preventDefault(); submit() }} className="space-y-4">
+          <Input
+            type="password"
+            placeholder="Passcode"
+            value={value}
+            onChange={e => { setValue(e.target.value); setError(false) }}
+            className={shake ? 'animate-shake border-destructive' : ''}
+          />
+          {error && <p className="text-destructive text-sm text-center">Incorrect passcode</p>}
+          <Button type="submit" className="w-full">Enter</Button>
+        </form>
       </div>
     </div>
   )
