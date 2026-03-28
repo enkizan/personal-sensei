@@ -1,6 +1,5 @@
 'use client'
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Input }  from '@/components/ui/input'
 import { Eye, EyeOff } from 'lucide-react'
@@ -10,7 +9,6 @@ export default function PasscodePage() {
   const [error,   setError]   = useState(false)
   const [shake,   setShake]   = useState(false)
   const [visible, setVisible] = useState(false)
-  const router = useRouter()
 
   async function submit() {
     const res = await fetch('/api/auth', {
@@ -19,7 +17,7 @@ export default function PasscodePage() {
       body: JSON.stringify({ passcode: value }),
     })
     if (res.ok) {
-      router.push('/dashboard')
+      window.location.href = '/dashboard'
     } else {
       setValue('')
       setError(true)
