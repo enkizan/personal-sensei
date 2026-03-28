@@ -1,6 +1,14 @@
 import type { Domain } from '@/lib/domains'
 
+const RANDOM_TOPIC_INSTRUCTION = `TOPIC SELECTION: No topic was specified. Choose one that is:
+- Appropriate for this level and domain
+- Interesting and practical for a learner
+- Not a generic "Introduction" — pick something specific (e.g. a grammar pattern, cultural theme, or real-world scenario)
+State your chosen topic clearly at the start of the title field.`
+
 export function lessonPrompt(domain: Domain, level: string, chapter: number, topic: string): string {
+  const isRandom = topic === 'random'
+
   if (domain === 'english') {
     const levelProfiles: Record<string, string> = {
       a1: `BEGINNER — Simple present/past only. Very common words (top 1000). Short sentences (5–8 words). Basic Subject-Verb-Object. Familiar, everyday topics only.`,
@@ -21,13 +29,13 @@ export function lessonPrompt(domain: Domain, level: string, chapter: number, top
 
 CEFR Level: ${level.toUpperCase()}
 Chapter: ${chapter}
-Topic: ${topic}
+${isRandom ? RANDOM_TOPIC_INSTRUCTION : `Topic: ${topic}`}
 
 LEVEL PROFILE — strictly follow this:
 ${profile}
 
 DEPTH REQUIREMENT — this is critical:
-Treat "${topic}" as the central theme and go DEEP into it. Do not give a generic language lesson that happens to mention the topic. Instead:
+${isRandom ? 'Go DEEP into your chosen topic.' : `Treat "${topic}" as the central theme and go DEEP into it.`} Do not give a generic language lesson that happens to mention the topic. Instead:
 - Choose vocabulary DIRECTLY and specifically drawn from this topic's real-world usage
 - Grammar patterns should be demonstrated with examples SET IN THIS TOPIC (not generic sentences)
 - The content paragraph should explain sub-aspects, background, real applications, and nuances OF THIS TOPIC
@@ -61,13 +69,13 @@ Requirements:
 
 CEFR Level: ${level.toUpperCase()}
 Chapter: ${chapter}
-Topic: ${topic}
+${isRandom ? RANDOM_TOPIC_INSTRUCTION : `Topic: ${topic}`}
 
 LEVEL PROFILE — strictly follow this:
 ${profile}
 
 DEPTH REQUIREMENT — this is critical:
-Treat "${topic}" as the central theme and go DEEP into it. Choose vocabulary and grammar examples DIRECTLY from this topic's real-world French usage — not generic sentences. The content should explain the topic with level-appropriate French.
+${isRandom ? 'Go DEEP into your chosen topic.' : `Treat "${topic}" as the central theme and go DEEP into it.`} Choose vocabulary and grammar examples DIRECTLY from this topic's real-world French usage — not generic sentences. The content should explain the topic with level-appropriate French.
 
 Chinese speaker advantages to leverage:
 - French loanwords that entered Chinese (芭蕾 ballet, 沙发 sofa, 香槟 champagne, 马赛克 mosaïque)
@@ -86,8 +94,9 @@ Requirements:
   if (domain === 'math') {
     return `You are creating a structured math lesson.
 
-Level/Topic: ${level} — ${topic}
+Level: ${level}
 Chapter: ${chapter}
+${isRandom ? RANDOM_TOPIC_INSTRUCTION : `Topic: ${topic}`}
 
 Requirements:
 - 3–5 key concepts with clear definitions
@@ -115,13 +124,13 @@ Requirements:
 
 Level: ${level.toUpperCase()}
 Chapter: ${chapter}
-Topic: ${topic}
+${isRandom ? RANDOM_TOPIC_INSTRUCTION : `Topic: ${topic}`}
 
 LEVEL PROFILE — strictly follow this:
 ${profile}
 
 DEPTH REQUIREMENT — this is critical:
-Treat "${topic}" as the central theme and go DEEP into it. Choose vocabulary DIRECTLY from this topic's Japanese usage — not generic JLPT vocab lists. Grammar examples must be SET IN this topic context. The content should explain the topic using level-appropriate Japanese.
+${isRandom ? 'Go DEEP into your chosen topic.' : `Treat "${topic}" as the central theme and go DEEP into it.`} Choose vocabulary DIRECTLY from this topic's Japanese usage — not generic JLPT vocab lists. Grammar examples must be SET IN this topic context. The content should explain the topic using level-appropriate Japanese.
 
 Chinese speaker advantages to leverage:
 - Kanji that share meaning with Chinese (漢字 cognates) — explicitly call out shared vs diverged meanings

@@ -22,7 +22,6 @@ export default function AdminPage() {
   const [error,   setError]   = useState('')
 
   async function generate() {
-    if (!topic.trim()) { setError(t.adminTopicRequired); return }
     setLoading(true); setError(''); setResult(null)
     try {
       const res = await fetch('/api/generate-lesson', {

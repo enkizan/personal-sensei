@@ -10,7 +10,8 @@ import type { Domain } from '@/lib/domains'
 const anthropic = createAnthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
 
 export async function POST(req: Request) {
-  const { domain = 'japanese', level = 'n5', chapter = 1, topic = 'Introduction' } = await req.json()
+  const { domain = 'japanese', level = 'n5', chapter = 1, topic: rawTopic = '' } = await req.json()
+  const topic = rawTopic.trim() || 'random'
 
   try {
     const { object } = await generateObject({
@@ -20,8 +21,11 @@ export async function POST(req: Request) {
       maxOutputTokens: 4096,
     })
 
+    // When topic was random, store the AI-chosen title so the DB record is meaningful
+    const storedTopic = topic === 'random' ? (object as any).title : topic
+
     const rows = await db.insert(lessons).values({
-      level, chapter, topic, domain,
+      level, chapter, topic: storedTopic, domain,
       content: object,
     }).returning()
 
