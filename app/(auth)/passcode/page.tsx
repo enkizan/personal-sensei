@@ -1,28 +1,42 @@
 'use client'
 import { useState } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Input }  from '@/components/ui/input'
 import { Eye, EyeOff } from 'lucide-react'
 
 export default function PasscodePage() {
+  const searchParams = useSearchParams()
   const [value,   setValue]   = useState('')
-  const [error,   setError]   = useState(false)
   const [shake,   setShake]   = useState(false)
   const [visible, setVisible] = useState(false)
 
-  async function submit() {
+  // error=1 comes from the native form POST redirect on wrong passcode
+  const serverError = searchParams.get('error') === '1'
+  const [clientError, setClientError] = useState(false)
+  const error = serverError || clientError
+
+  function triggerShake() {
+    setShake(true)
+    setTimeout(() => setShake(false), 500)
+  }
+
+  // JS-enhanced path: fetch so we get the shake animation on failure
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault()
+    setClientError(false)
     const res = await fetch('/api/auth', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ passcode: value }),
     })
     if (res.ok) {
-      window.location.href = '/dashboard'
+      // Hard redirect so the browser sends the new cookie to the middleware
+      window.location.replace('/dashboard')
     } else {
       setValue('')
-      setError(true)
-      setShake(true)
-      setTimeout(() => setShake(false), 500)
+      setClientError(true)
+      triggerShake()
     }
   }
 
@@ -34,13 +48,21 @@ export default function PasscodePage() {
           <h1 className="text-xl font-semibold">Learning Platform</h1>
           <p className="text-muted-foreground text-sm">Enter the passcode to continue</p>
         </div>
-        <form onSubmit={e => { e.preventDefault(); submit() }} className="space-y-4">
+
+        {/* method + action = native form POST fallback if JS fetch fails on iOS */}
+        <form
+          method="POST"
+          action="/api/auth"
+          onSubmit={handleSubmit}
+          className="space-y-4"
+        >
           <div className="relative">
             <Input
+              name="passcode"
               type={visible ? 'text' : 'password'}
               placeholder="Passcode"
               value={value}
-              onChange={e => { setValue(e.target.value); setError(false) }}
+              onChange={e => { setValue(e.target.value); setClientError(false) }}
               className={`pr-10 ${shake ? 'animate-shake border-destructive' : ''}`}
             />
             <button
