@@ -1,17 +1,21 @@
 'use client'
-import { createContext, useContext, useState, useCallback, type ReactNode } from 'react'
+import { createContext, useContext, useState, useCallback, useEffect, type ReactNode } from 'react'
 import type { Domain, MathLevelMode } from '@/lib/domains'
 import type { Student } from '@/lib/db/schema'
+
+export type UiLang = 'en' | 'zh-TW'
 
 interface AppState {
   currentStudent:  Student | null
   domain:          Domain
   homeDomain:      Domain
   mathLevelMode:   MathLevelMode
+  uiLang:          UiLang
   setStudent:      (s: Student | null) => void
   switchDomain:    (d: Domain) => Promise<void>
   setHomeDomain:   (d: Domain) => Promise<void>
   setMathLevelMode:(m: MathLevelMode) => void
+  toggleUiLang:   () => void
 }
 
 const AppContext = createContext<AppState | null>(null)
@@ -31,6 +35,13 @@ export function AppProvider({
     (initialStudent?.home_domain as Domain) ?? 'japanese'
   )
   const [mathLevelMode, setMathLevelMode] = useState<MathLevelMode>('topic')
+  const [uiLang, setUiLang] = useState<UiLang>('en')
+
+  // Hydrate uiLang from localStorage after mount (avoids SSR mismatch)
+  useEffect(() => {
+    const stored = localStorage.getItem('uiLang')
+    if (stored === 'zh-TW' || stored === 'en') setUiLang(stored)
+  }, [])
 
   const setStudent = useCallback((s: Student | null) => {
     setCurrentStudent(s)
@@ -66,10 +77,18 @@ export function AppProvider({
     }
   }, [currentStudent])
 
+  const toggleUiLang = useCallback(() => {
+    setUiLang(prev => {
+      const next: UiLang = prev === 'en' ? 'zh-TW' : 'en'
+      localStorage.setItem('uiLang', next)
+      return next
+    })
+  }, [])
+
   return (
     <AppContext.Provider value={{
-      currentStudent, domain, homeDomain, mathLevelMode,
-      setStudent, switchDomain, setHomeDomain, setMathLevelMode,
+      currentStudent, domain, homeDomain, mathLevelMode, uiLang,
+      setStudent, switchDomain, setHomeDomain, setMathLevelMode, toggleUiLang,
     }}>
       {children}
     </AppContext.Provider>

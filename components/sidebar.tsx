@@ -6,7 +6,7 @@ import { useApp } from '@/app/context'
 import { DomainPicker } from './domain-picker'
 import { StudentPicker } from './student-picker'
 import { DOMAINS } from '@/lib/domains'
-import { Sun, Moon, LayoutDashboard, BookOpen, MessageCircle, BarChart2, Settings, Home } from 'lucide-react'
+import { Sun, Moon, LayoutDashboard, BookOpen, MessageCircle, BarChart2, Settings, Home, Languages } from 'lucide-react'
 import { useState } from 'react'
 
 // Kanji badge characters per domain — mirrors the original brand-kanji style
@@ -17,19 +17,49 @@ const BRAND_KANJI: Record<string, string> = {
   math:     '数',
 }
 
+const T = {
+  en: {
+    learning:      'Learning',
+    nav: {
+      '/dashboard': 'Dashboard',
+      '/lessons':   'Lessons',
+      '/chat':      'Ask Sensei',
+      '/progress':  'Progress',
+      '/admin':     'Admin',
+    },
+    lightMode:     'Light mode',
+    darkMode:      'Dark mode',
+    selectStudent: 'Select student',
+  },
+  'zh-TW': {
+    learning:      '學習中',
+    nav: {
+      '/dashboard': '儀表板',
+      '/lessons':   '課程',
+      '/chat':      '問老師',
+      '/progress':  '進度',
+      '/admin':     '管理',
+    },
+    lightMode:     '淺色模式',
+    darkMode:      '深色模式',
+    selectStudent: '選擇學員',
+  },
+} as const
+
 const NAV = [
-  { href: '/dashboard', label: 'Dashboard',  Icon: LayoutDashboard },
-  { href: '/lessons',   label: 'Lessons',    Icon: BookOpen },
-  { href: '/chat',      label: 'Ask Sensei', Icon: MessageCircle },
-  { href: '/progress',  label: 'Progress',   Icon: BarChart2 },
-  { href: '/admin',     label: 'Admin',      Icon: Settings },
-]
+  { href: '/dashboard', Icon: LayoutDashboard },
+  { href: '/lessons',   Icon: BookOpen },
+  { href: '/chat',      Icon: MessageCircle },
+  { href: '/progress',  Icon: BarChart2 },
+  { href: '/admin',     Icon: Settings },
+] as const
 
 export function Sidebar() {
   const pathname = usePathname()
   const { theme, setTheme } = useTheme()
-  const { currentStudent, domain, homeDomain, setHomeDomain } = useApp()
+  const { currentStudent, domain, homeDomain, setHomeDomain, uiLang, toggleUiLang } = useApp()
   const [pickerOpen, setPickerOpen] = useState(false)
+  const t = T[uiLang]
 
   return (
     <aside className="w-56 shrink-0 flex flex-col h-screen bg-sidebar border-r border-sidebar-border">
@@ -45,8 +75,23 @@ export function Sidebar() {
             <div className="text-sm font-semibold leading-none text-sidebar-foreground">
               {DOMAINS[domain].name}
             </div>
-            <div className="text-xs text-sidebar-foreground/60 mt-0.5">Learning</div>
+            <div className="text-xs text-sidebar-foreground/60 mt-0.5">{t.learning}</div>
           </div>
+          {/* UI language toggle */}
+          <button
+            onClick={toggleUiLang}
+            title={uiLang === 'en' ? 'Switch to 繁中' : '切換至 English'}
+            className="shrink-0 transition-colors"
+          >
+            <Languages
+              className={`h-4 w-4 ${
+                uiLang === 'zh-TW'
+                  ? 'text-primary'
+                  : 'text-sidebar-foreground/30 hover:text-sidebar-foreground/70'
+              }`}
+            />
+          </button>
+          {/* Home domain toggle */}
           {currentStudent && (
             <button
               onClick={() => setHomeDomain(domain)}
@@ -68,7 +113,7 @@ export function Sidebar() {
 
       {/* Nav */}
       <nav className="flex-1 p-2 space-y-0.5">
-        {NAV.map(({ href, label, Icon }) => {
+        {NAV.map(({ href, Icon }) => {
           const active = pathname.startsWith(href)
           return (
             <Link key={href} href={href}>
@@ -78,7 +123,7 @@ export function Sidebar() {
                   : 'text-sidebar-foreground/70 hover:bg-sidebar-accent/70 hover:text-sidebar-foreground'
               }`}>
                 <Icon className="h-4 w-4 shrink-0" />
-                {label}
+                {t.nav[href]}
               </span>
             </Link>
           )
@@ -94,7 +139,7 @@ export function Sidebar() {
           {theme === 'dark'
             ? <Sun className="h-4 w-4 shrink-0" />
             : <Moon className="h-4 w-4 shrink-0" />}
-          {theme === 'dark' ? 'Light mode' : 'Dark mode'}
+          {theme === 'dark' ? t.lightMode : t.darkMode}
         </button>
 
         <button
@@ -105,7 +150,7 @@ export function Sidebar() {
             {currentStudent ? currentStudent.name[0].toUpperCase() : '?'}
           </span>
           <span className="truncate">
-            {currentStudent ? currentStudent.name : 'Select student'}
+            {currentStudent ? currentStudent.name : t.selectStudent}
           </span>
         </button>
       </div>
