@@ -5,13 +5,17 @@ import { getDomainLevels } from '@/lib/domains'
 import { LessonCard } from '@/components/lesson-card'
 import { MathLevelToggle } from '@/components/math-level-toggle'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
+import { useT, translateMathLabels } from '@/lib/i18n'
 
 interface Lesson { id: number; level: string; topic: string; chapter: number }
 interface ProgressRow { lesson_id: number; status: string }
 
 export default function LessonsPage() {
   const { domain, mathLevelMode, currentStudent } = useApp()
-  const { keys, labels } = getDomainLevels(domain, mathLevelMode)
+  const t = useT()
+  const { keys, labels: rawLabels } = getDomainLevels(domain, mathLevelMode)
+  // For math, swap in translated labels; other domains keep their own label strings
+  const labels = domain === 'math' ? translateMathLabels(mathLevelMode, t) : rawLabels
   const [lessons,     setLessons]     = useState<Lesson[]>([])
   const [progressMap, setProgressMap] = useState<Record<number, string>>({})
   const [activeLevel, setActiveLevel] = useState(keys[0])
@@ -39,7 +43,7 @@ export default function LessonsPage() {
 
   return (
     <div className="max-w-3xl space-y-4">
-      <h1 className="text-2xl font-bold">Lessons</h1>
+      <h1 className="text-2xl font-bold">{t.lessonsHeading}</h1>
       {domain === 'math' && <MathLevelToggle />}
       <Tabs value={activeLevel} onValueChange={loadLevel}>
         <TabsList className="flex-wrap h-auto gap-1">
@@ -50,7 +54,7 @@ export default function LessonsPage() {
         {keys.map(k => (
           <TabsContent key={k} value={k} className="mt-4 space-y-2">
             {lessons.length === 0
-              ? <p className="text-muted-foreground text-sm">No lessons at this level yet.</p>
+              ? <p className="text-muted-foreground text-sm">{t.noLessons}</p>
               : lessons.map(l => (
                 <LessonCard key={l.id} {...l}
                   status={progressMap[l.id] as 'in_progress' | 'completed' | null ?? null} />

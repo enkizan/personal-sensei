@@ -3,9 +3,11 @@ import { useApp } from '@/app/context'
 import { DOMAINS, type Domain } from '@/lib/domains'
 import { ChevronDown, Home } from 'lucide-react'
 import { useState } from 'react'
+import { useT } from '@/lib/i18n'
 
 export function DomainPicker() {
   const { domain, homeDomain, switchDomain } = useApp()
+  const t = useT()
   const [open, setOpen] = useState(false)
   const current = DOMAINS[domain]
 
@@ -23,7 +25,7 @@ export function DomainPicker() {
       >
         <span className="flex items-center gap-2">
           <span className="text-base">{current.icon}</span>
-          <span className="font-medium">{current.name}</span>
+          <span className="font-medium">{t.domainName[domain]}</span>
         </span>
         <ChevronDown className="h-4 w-4 opacity-50" />
       </button>
@@ -37,7 +39,7 @@ export function DomainPicker() {
               onClick={() => { switchDomain(key); setOpen(false) }}
             >
               <span className="text-base font-bold w-6 text-center">{DOMAINS[key].icon}</span>
-              <span className="flex-1 text-left">{DOMAINS[key].name}</span>
+              <span className="flex-1 text-left">{t.domainName[key]}</span>
               {key === homeDomain
                 ? <Home className="h-3.5 w-3.5 text-primary fill-primary" />
                 : key === domain && <span className="text-primary text-xs">✓</span>

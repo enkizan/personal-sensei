@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import { Badge } from '@/components/ui/badge'
 import { ChevronDown, ChevronRight, Sparkles, MessageCircle } from 'lucide-react'
+import { useT } from '@/lib/i18n'
 
 function AskSenseiBtn({ content }: { content: string }) {
   const router = useRouter()
@@ -33,6 +34,7 @@ interface LessonViewerProps {
 export function LessonViewer({ lesson, onStartQuiz, onLessonUpdate }: LessonViewerProps) {
   const lessonDomain = lesson.domain as string
   const c = lesson.content
+  const t = useT()
 
   // Track which grammar cards are expanded, and which are generating
   const [expandedGrammar, setExpandedGrammar] = useState<Set<number>>(new Set())
@@ -59,14 +61,14 @@ export function LessonViewer({ lesson, onStartQuiz, onLessonUpdate }: LessonView
   }
 
   const tabs = [
-    { key: 'content',  label: 'Content',    domains: ['japanese','english','french','math'] },
+    { key: 'content',  label: lessonDomain === 'math' ? t.tabContent  : 'Content',    domains: ['japanese','english','french','math'] },
     { key: 'vocab',    label: 'Vocabulary', domains: ['japanese','english','french'] },
     { key: 'grammar',  label: 'Grammar',    domains: ['japanese','english','french'] },
-    { key: 'concepts', label: 'Concepts',   domains: ['math'] },
-    { key: 'worked',   label: 'Examples',   domains: ['math'] },
+    { key: 'concepts', label: t.tabConcepts,  domains: ['math'] },
+    { key: 'worked',   label: t.tabExamples,  domains: ['math'] },
     { key: 'notes',    label: 'CN Notes',   domains: ['japanese','french'] },
-    { key: 'quiz',     label: 'Quiz',       domains: ['japanese','english','french','math'] },
-  ].filter(t => t.domains.includes(lessonDomain))
+    { key: 'quiz',     label: lessonDomain === 'math' ? t.tabQuiz     : 'Quiz',       domains: ['japanese','english','french','math'] },
+  ].filter(tab => tab.domains.includes(lessonDomain))
 
   return (
     <div className="max-w-3xl space-y-4">
@@ -75,7 +77,11 @@ export function LessonViewer({ lesson, onStartQuiz, onLessonUpdate }: LessonView
           <h1 className="text-2xl font-bold">{c.title}</h1>
           <div className="flex gap-2 mt-1">
             <Badge variant="outline" className="uppercase">{lesson.level}</Badge>
-            <span className="text-sm text-muted-foreground">Chapter {lesson.chapter}</span>
+            <span className="text-sm text-muted-foreground">
+              {lessonDomain === 'math' && t.chapter !== 'Chapter'
+                ? `${t.chapter} ${lesson.chapter} 章`
+                : `Chapter ${lesson.chapter}`}
+            </span>
           </div>
         </div>
       </div>
@@ -102,7 +108,8 @@ export function LessonViewer({ lesson, onStartQuiz, onLessonUpdate }: LessonView
                 {(lessonDomain === 'english' || lessonDomain === 'french') && <th className="text-left py-2 pr-4">Pronunciation</th>}
                 {lessonDomain === 'french'   && <th className="text-left py-2 pr-4">Gender</th>}
                 {lessonDomain === 'japanese' && <th className="text-left py-2 pr-4">中文</th>}
-                <th className="text-left py-2">English</th>
+                <th className="text-left py-2 pr-4">English</th>
+                <th className="py-2 w-6" />
               </tr>
             </thead>
             <tbody>
@@ -114,10 +121,8 @@ export function LessonViewer({ lesson, onStartQuiz, onLessonUpdate }: LessonView
                   {(lessonDomain === 'english' || lessonDomain === 'french') && <td className="py-2 pr-4 text-muted-foreground">{v.reading ?? v.pronunciation}</td>}
                   {lessonDomain === 'french'   && <td className="py-2 pr-4 text-muted-foreground">{v.gender}</td>}
                   {lessonDomain === 'japanese' && <td className="py-2 pr-4">{v.meaning_zh}</td>}
-                  <td className="py-2">
-                    {v.meaning_en}
-                    <AskSenseiBtn content={v.word} />
-                  </td>
+                  <td className="py-2 pr-4">{v.meaning_en}</td>
+                  <td className="py-2"><AskSenseiBtn content={v.word} /></td>
                 </tr>
               ))}
             </tbody>
@@ -225,12 +230,12 @@ export function LessonViewer({ lesson, onStartQuiz, onLessonUpdate }: LessonView
           {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
           {c.worked_examples?.map((w: any, i: number) => (
             <div key={i} className="rounded-lg border p-4">
-              <p className="font-semibold">Problem: {w.problem}</p>
+              <p className="font-semibold">{t.problem}: {w.problem}</p>
               <ol className="mt-2 space-y-1 text-sm list-decimal list-inside">
                 {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                 {w.steps?.map((s: any, j: number) => <li key={j}>{s}</li>)}
               </ol>
-              <p className="mt-2 font-medium text-primary">Answer: {w.solution}</p>
+              <p className="mt-2 font-medium text-primary">{t.answer}: {w.solution}</p>
             </div>
           ))}
         </TabsContent>
@@ -245,13 +250,13 @@ export function LessonViewer({ lesson, onStartQuiz, onLessonUpdate }: LessonView
         {/* Quiz */}
         <TabsContent value="quiz" className="mt-4">
           <p className="text-muted-foreground mb-4">
-            {c.quiz?.length ?? 0} questions — test your understanding.
+            {t.questionsHint(c.quiz?.length ?? 0)}
           </p>
           <button
             onClick={onStartQuiz}
             className="px-4 py-2 rounded-lg bg-primary text-primary-foreground font-medium hover:opacity-90 transition-opacity"
           >
-            Start quiz
+            {t.startQuiz}
           </button>
         </TabsContent>
       </Tabs>

@@ -1,19 +1,17 @@
 'use client'
 import { useApp } from '@/app/context'
-import { MATH_LEVEL_MODES, type MathLevelMode } from '@/lib/domains'
+import { type MathLevelMode } from '@/lib/domains'
+import { useT } from '@/lib/i18n'
 
-const MODES: { key: MathLevelMode; label: string }[] = [
-  { key: 'topic',    label: 'Topic' },
-  { key: 'tier',     label: 'Tier' },
-  { key: 'combined', label: 'Combined' },
-]
+const MODE_KEYS: MathLevelMode[] = ['topic', 'tier', 'combined']
 
 export function MathLevelToggle() {
   const { mathLevelMode, setMathLevelMode } = useApp()
+  const t = useT()
 
   return (
     <div className="flex rounded-lg border overflow-hidden w-fit">
-      {MODES.map(({ key, label }) => (
+      {MODE_KEYS.map(key => (
         <button key={key}
           onClick={() => setMathLevelMode(key)}
           className={`px-3 py-1.5 text-sm transition-colors ${
@@ -21,7 +19,7 @@ export function MathLevelToggle() {
               ? 'bg-primary text-primary-foreground'
               : 'hover:bg-muted'
           }`}>
-          {label}
+          {t.mathMode[key]}
         </button>
       ))}
     </div>
