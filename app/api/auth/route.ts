@@ -13,15 +13,21 @@ export async function POST(req: Request) {
 
   const isNativeForm = contentType.includes('application/x-www-form-urlencoded')
 
+  // Build base from Host header — req.url uses the internal Docker hostname
+  // (localhost:3000) which is unreachable from external devices on the LAN.
+  const host  = req.headers.get('x-forwarded-host') ?? req.headers.get('host') ?? 'localhost'
+  const proto = req.headers.get('x-forwarded-proto') ?? 'http'
+  const base  = `${proto}://${host}`
+
   if (passcode !== process.env.PASSCODE) {
     if (isNativeForm) {
-      return NextResponse.redirect(new URL('/passcode?error=1', req.url))
+      return NextResponse.redirect(`${base}/passcode?error=1`)
     }
     return NextResponse.json({ error: 'incorrect' }, { status: 401 })
   }
 
   const res = isNativeForm
-    ? NextResponse.redirect(new URL('/dashboard', req.url), 303)
+    ? NextResponse.redirect(`${base}/dashboard`, 303)
     : NextResponse.json({ ok: true })
 
   res.cookies.set('jp_auth', 'granted', {
