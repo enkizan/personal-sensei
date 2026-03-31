@@ -29,7 +29,7 @@ chat_conversations (
   id          serial PRIMARY KEY
   student_id  integer NOT NULL  → students.id
   domain      text NOT NULL     -- 'japanese' | 'english' | 'french' | 'math'
-  lesson_id   integer NULL      -- null = general domain thread
+  lesson_id   integer NOT NULL DEFAULT -1  -- -1 = general domain thread (NULL breaks UNIQUE)
   is_active   boolean DEFAULT true
   created_at  timestamp DEFAULT now()
   UNIQUE(student_id, domain, lesson_id, is_active)
@@ -44,7 +44,7 @@ chat_messages (
 )
 ```
 
-`lesson_id = null` means a general domain thread. A non-null `lesson_id` means a lesson-scoped thread launched from the lesson viewer. The unique constraint ensures only one active thread per scope at any time.
+`lesson_id = -1` is the sentinel for a general domain thread (using `NULL` would break the `UNIQUE` constraint in Postgres since `NULL != NULL`). A positive `lesson_id` means a lesson-scoped thread launched from the lesson viewer. The unique constraint ensures only one active thread per scope at any time.
 
 ---
 
@@ -84,8 +84,8 @@ Append `&lesson_id=<lessonId>` to the `/chat?q=...` navigation URL so the chat p
 
 ```
 scope key = (student_id, domain, lesson_id)
-  lesson_id = null    → general "Ask Sensei" thread for this domain
-  lesson_id = 42      → thread tied to lesson 42
+  lesson_id = -1    → general "Ask Sensei" thread for this domain
+  lesson_id = 42    → thread tied to lesson 42
 ```
 
 When `AskSenseiBtn` is clicked inside a lesson, the chat page receives `lesson_id` and loads/creates the lesson-scoped thread. Navigating directly to `/chat` (no `lesson_id`) loads the general domain thread.
