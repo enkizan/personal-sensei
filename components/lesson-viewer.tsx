@@ -6,12 +6,12 @@ import { Badge } from '@/components/ui/badge'
 import { ChevronDown, ChevronRight, Sparkles, MessageCircle } from 'lucide-react'
 import { useT } from '@/lib/i18n'
 
-function AskSenseiBtn({ content }: { content: string }) {
+function AskSenseiBtn({ content, lessonId }: { content: string; lessonId: number }) {
   const router = useRouter()
   const q = encodeURIComponent(`Please dive deeper and explain: "${content}"`)
   return (
     <button
-      onClick={() => router.push(`/chat?q=${q}`)}
+      onClick={() => router.push(`/chat?q=${q}&lesson_id=${lessonId}`)}
       title="Ask Sensei"
       className="ml-1.5 inline-flex items-center text-muted-foreground hover:text-primary transition-colors align-middle"
     >
@@ -122,7 +122,7 @@ export function LessonViewer({ lesson, onStartQuiz, onLessonUpdate }: LessonView
                   {lessonDomain === 'french'   && <td className="py-2 pr-4 text-muted-foreground">{v.gender}</td>}
                   {lessonDomain === 'japanese' && <td className="py-2 pr-4">{v.meaning_zh}</td>}
                   <td className="py-2 pr-4">{v.meaning_en}</td>
-                  <td className="py-2"><AskSenseiBtn content={v.word} /></td>
+                  <td className="py-2"><AskSenseiBtn content={v.word} lessonId={lesson.id} /></td>
                 </tr>
               ))}
             </tbody>
@@ -143,15 +143,15 @@ export function LessonViewer({ lesson, onStartQuiz, onLessonUpdate }: LessonView
                 <div className="p-4">
                   <p className="font-semibold text-primary">
                     {g.pattern}
-                    <AskSenseiBtn content={g.pattern} />
+                    <AskSenseiBtn content={g.pattern} lessonId={lesson.id} />
                   </p>
                   <p className="mt-1 text-sm">
                     {g.explanation}
-                    <AskSenseiBtn content={g.explanation} />
+                    <AskSenseiBtn content={g.explanation} lessonId={lesson.id} />
                   </p>
                   <p className="mt-2 text-sm text-muted-foreground italic">
                     {g.example}
-                    <AskSenseiBtn content={g.example} />
+                    <AskSenseiBtn content={g.example} lessonId={lesson.id} />
                   </p>
                 </div>
 
@@ -186,7 +186,7 @@ export function LessonViewer({ lesson, onStartQuiz, onLessonUpdate }: LessonView
                             {extraExamples.map((ex, j) => (
                               <li key={j} className="text-muted-foreground italic">
                                 {ex}
-                                <AskSenseiBtn content={ex} />
+                                <AskSenseiBtn content={ex} lessonId={lesson.id} />
                               </li>
                             ))}
                           </ol>
