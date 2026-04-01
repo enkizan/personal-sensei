@@ -13,7 +13,7 @@ export async function POST(req: Request) {
     lessonContext = '',
   } = await req.json()
 
-  const modelMessages = await convertToModelMessages(messages as UIMessage[])
+  const modelMessages = await convertToModelMessages((messages as UIMessage[]).slice(-50))
 
   const result = streamText({
     model:           anthropic('claude-haiku-4-5-20251001'),
