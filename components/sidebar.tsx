@@ -7,7 +7,7 @@ import { DomainPicker } from './domain-picker'
 import { StudentPicker } from './student-picker'
 import { DOMAINS } from '@/lib/domains'
 import { Sun, Moon, LayoutDashboard, BookOpen, MessageCircle, BarChart2, Settings, Home, Languages } from 'lucide-react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 // Kanji badge characters per domain — mirrors the original brand-kanji style
 const BRAND_KANJI: Record<string, string> = {
@@ -59,6 +59,8 @@ export function Sidebar() {
   const { theme, setTheme } = useTheme()
   const { currentStudent, domain, homeDomain, setHomeDomain, uiLang, toggleUiLang } = useApp()
   const [pickerOpen, setPickerOpen] = useState(false)
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => setMounted(true), [])
   const t = T[uiLang]
 
   return (
@@ -136,10 +138,10 @@ export function Sidebar() {
           className="flex w-full items-center gap-2.5 h-9 px-3 rounded-md text-sm text-sidebar-foreground/70 hover:bg-sidebar-accent/70 hover:text-sidebar-foreground transition-colors"
           onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
         >
-          {theme === 'dark'
+          {mounted && theme === 'dark'
             ? <Sun className="h-4 w-4 shrink-0" />
             : <Moon className="h-4 w-4 shrink-0" />}
-          {theme === 'dark' ? t.lightMode : t.darkMode}
+          {mounted && theme === 'dark' ? t.lightMode : t.darkMode}
         </button>
 
         <button
