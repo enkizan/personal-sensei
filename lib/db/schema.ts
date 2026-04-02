@@ -17,6 +17,7 @@ export const lessons = pgTable('lessons', {
   chapter:    integer('chapter').notNull(),
   topic:      text('topic').notNull(),
   content:    jsonb('content').notNull(),
+  contentZh:  jsonb('content_zh'),
   domain:     text('domain').default('japanese'),
   created_at: timestamp('created_at').defaultNow(),
 })
