@@ -1,10 +1,11 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import { Badge } from '@/components/ui/badge'
 import { ChevronDown, ChevronRight, Sparkles, MessageCircle } from 'lucide-react'
 import { useT } from '@/lib/i18n'
+import { useApp } from '@/app/context'
 
 function AskSenseiBtn({ content, lessonId }: { content: string; lessonId: number }) {
   const router = useRouter()
@@ -25,6 +26,8 @@ interface LessonViewerProps {
     id: number; level: string; chapter: number; topic: string; domain: string
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     content: any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    contentZh?: any
   }
   onStartQuiz: () => void
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -33,8 +36,32 @@ interface LessonViewerProps {
 
 export function LessonViewer({ lesson, onStartQuiz, onLessonUpdate }: LessonViewerProps) {
   const lessonDomain = lesson.domain as string
-  const c = lesson.content
   const t = useT()
+  const { uiLang } = useApp()
+  const isMath    = lessonDomain === 'math'
+  const useZh     = uiLang === 'zh-TW' && isMath
+  const cZh       = lesson.contentZh ?? null
+
+  const [translating,    setTranslating]    = useState(false)
+  const [translateError, setTranslateError] = useState<string | null>(null)
+  const [retryCount,     setRetryCount]     = useState(0)
+
+  useEffect(() => {
+    if (!useZh || cZh != null || translating) return
+    setTranslating(true)
+    setTranslateError(null)
+    fetch(`/api/lessons/${lesson.id}/translate-zh`, { method: 'POST' })
+      .then(r => r.json())
+      .then(data => {
+        if (data.error) throw new Error(data.error)
+        onLessonUpdate?.({ ...lesson, contentZh: data.contentZh })
+      })
+      .catch(err => setTranslateError(err instanceof Error ? err.message : String(err)))
+      .finally(() => setTranslating(false))
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [useZh, lesson.id, cZh, retryCount])
+
+  const c = (useZh && cZh) ? cZh : lesson.content
 
   // Track which grammar cards are expanded, and which are generating
   const [expandedGrammar, setExpandedGrammar] = useState<Set<number>>(new Set())
@@ -72,6 +99,30 @@ export function LessonViewer({ lesson, onStartQuiz, onLessonUpdate }: LessonView
 
   return (
     <div className="max-w-3xl space-y-4">
+      {/* ZH translation loading / error state — math only */}
+      {useZh && cZh == null && (
+        <div className="rounded-lg border bg-muted/30 px-4 py-3 text-sm text-muted-foreground flex items-center gap-2">
+          {translating && (
+            <span className="inline-block h-3 w-3 rounded-full bg-primary animate-pulse shrink-0" />
+          )}
+          {translating
+            ? t.translating
+            : translateError
+              ? (
+                <span className="flex items-center gap-3">
+                  {t.translateError}
+                  <button
+                    onClick={() => { setTranslateError(null); setRetryCount(n => n + 1) }}
+                    className="underline hover:text-foreground"
+                  >
+                    {t.translateRetry}
+                  </button>
+                </span>
+              )
+            : null}
+        </div>
+      )}
+
       <div className="flex items-start gap-3">
         <div>
           <h1 className="text-2xl font-bold">{c.title}</h1>
