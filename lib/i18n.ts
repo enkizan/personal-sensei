@@ -42,6 +42,9 @@ const STRINGS = {
     adminOpen:            'Open lesson →',
     adminGenerateFailed:  'Generation failed',
     adminNetworkError:    'Network error',
+    translating:          'Generating Chinese translation…',
+    translateError:       'Failed to generate Chinese translation.',
+    translateRetry:       'Retry',
   },
   'zh-TW': {
     domainName: { japanese: 'Nihongo', english: 'English', french: 'Français', math: '數學' },
@@ -76,6 +79,9 @@ const STRINGS = {
     adminOpen:            '開啟課程 →',
     adminGenerateFailed:  '生成失敗',
     adminNetworkError:    '網絡錯誤',
+    translating:          '正在生成中文翻譯…',
+    translateError:       '生成中文翻譯失敗。',
+    translateRetry:       '重試',
   },
 } as const
 
