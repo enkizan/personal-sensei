@@ -83,7 +83,7 @@ export function Sidebar() {
           <button
             onClick={toggleUiLang}
             title={uiLang === 'en' ? 'Switch to 繁中' : '切換至 English'}
-            className="shrink-0 transition-colors"
+            className="shrink-0 transition-colors cursor-pointer"
           >
             <Languages
               className={`h-4 w-4 ${
@@ -98,7 +98,7 @@ export function Sidebar() {
             <button
               onClick={() => setHomeDomain(domain)}
               title={domain === homeDomain ? 'Home domain' : 'Set as home domain'}
-              className="shrink-0 transition-colors"
+              className="shrink-0 transition-colors cursor-pointer"
             >
               <Home
                 className={`h-4 w-4 ${
@@ -135,7 +135,7 @@ export function Sidebar() {
       {/* Footer: theme toggle + student picker */}
       <div className="p-3 border-t border-sidebar-border space-y-1">
         <button
-          className="flex w-full items-center gap-2.5 h-9 px-3 rounded-md text-sm text-sidebar-foreground/70 hover:bg-sidebar-accent/70 hover:text-sidebar-foreground transition-colors"
+          className="flex w-full items-center gap-2.5 h-9 px-3 rounded-md text-sm text-sidebar-foreground/70 hover:bg-sidebar-accent/70 hover:text-sidebar-foreground transition-colors cursor-pointer"
           onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
         >
           {mounted && theme === 'dark'
@@ -145,7 +145,7 @@ export function Sidebar() {
         </button>
 
         <button
-          className="flex w-full items-center gap-2.5 h-9 px-3 rounded-md text-sm text-sidebar-foreground/70 hover:bg-sidebar-accent/70 hover:text-sidebar-foreground transition-colors"
+          className="flex w-full items-center gap-2.5 h-9 px-3 rounded-md text-sm text-sidebar-foreground/70 hover:bg-sidebar-accent/70 hover:text-sidebar-foreground transition-colors cursor-pointer"
           onClick={() => setPickerOpen(true)}
         >
           <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-bold">
