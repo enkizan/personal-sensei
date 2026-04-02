@@ -54,8 +54,8 @@ export default function LessonsPage() {
   }
 
   return (
-    <div className="max-w-3xl space-y-4">
-      <h1 className="text-2xl font-bold">{t.lessonsHeading}</h1>
+    <div className="max-w-3xl space-y-10">
+      <h1 className="text-3xl font-heading font-semibold leading-tight">{t.lessonsHeading}</h1>
       {domain === 'math' && <MathLevelToggle />}
       <Tabs value={activeLevel} onValueChange={loadLevel}>
         <TabsList className="flex-wrap h-auto gap-1">

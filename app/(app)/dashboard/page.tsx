@@ -32,9 +32,9 @@ export default function DashboardPage() {
   const tutor = DOMAINS[domain]
 
   return (
-    <div className="space-y-6 max-w-3xl">
+    <div className="space-y-10 max-w-3xl">
       <div>
-        <h1 className="text-2xl font-bold">
+        <h1 className="text-3xl font-heading font-semibold leading-tight">
           {domain === 'japanese' ? 'いらっしゃいませ' : 'Welcome back'}
           {currentStudent ? `, ${currentStudent.name}` : ''}!
         </h1>
@@ -44,7 +44,7 @@ export default function DashboardPage() {
       </div>
 
       {stats && (
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
           {[
             { label: 'Students',  value: stats.total_students },
             { label: 'Lessons',   value: stats.total_lessons },
@@ -53,10 +53,10 @@ export default function DashboardPage() {
           ].map(({ label, value }) => (
             <Card key={label}>
               <CardHeader className="pb-1">
-                <CardTitle className="text-sm text-muted-foreground">{label}</CardTitle>
+                <CardTitle className="text-xs uppercase tracking-widest text-muted-foreground">{label}</CardTitle>
               </CardHeader>
               <CardContent>
-                <span className="text-2xl font-bold">{value}</span>
+                <span className="text-4xl font-bold font-sans">{value}</span>
               </CardContent>
             </Card>
           ))}
@@ -64,22 +64,24 @@ export default function DashboardPage() {
       )}
 
       <div>
-        <h2 className="text-lg font-semibold mb-3">Recent lessons</h2>
+        <h2 className="text-lg font-heading font-semibold mb-4">Recent lessons</h2>
         {recent.length === 0
           ? <p className="text-muted-foreground text-sm">No lessons yet. Generate one in Admin.</p>
-          : recent.map(l => (
-            <Link key={l.id} href={`/lessons/${l.id}`}>
-              <Card className="mb-2 hover:bg-muted/50 cursor-pointer transition-colors">
-                <CardContent className="py-3 flex items-center justify-between">
-                  <span>{l.topic}</span>
-                  <span className="text-xs text-muted-foreground uppercase">{l.level}</span>
-                </CardContent>
-              </Card>
-            </Link>
-          ))
+          : <div className="flex flex-col gap-3">
+              {recent.map(l => (
+                <Link key={l.id} href={`/lessons/${l.id}`}>
+                  <Card className="hover:bg-muted/50 cursor-pointer transition-colors border-l-4 border-primary">
+                    <CardContent className="py-5 flex items-center justify-between">
+                      <span className="font-heading font-medium">{l.topic}</span>
+                      <span className="text-xs text-muted-foreground uppercase">{l.level}</span>
+                    </CardContent>
+                  </Card>
+                </Link>
+              ))}
+            </div>
         }
         <Link href="/lessons">
-          <Button variant="outline" className="mt-2">All lessons →</Button>
+          <Button variant="outline" className="mt-4">All lessons →</Button>
         </Link>
       </div>
     </div>

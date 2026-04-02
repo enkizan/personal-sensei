@@ -34,8 +34,8 @@ export default function ProgressPage() {
   }
 
   return (
-    <div className="max-w-3xl space-y-4">
-      <h1 className="text-2xl font-bold">Progress — {currentStudent.name}</h1>
+    <div className="max-w-3xl space-y-10">
+      <h1 className="text-3xl font-heading font-semibold leading-tight">Progress — {currentStudent.name}</h1>
       {rows.length === 0
         ? <p className="text-muted-foreground text-sm">No lessons started yet.</p>
         : rows.map(row => {

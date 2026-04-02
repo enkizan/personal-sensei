@@ -161,7 +161,7 @@ export default function ChatPage() {
   return (
     <div className="flex flex-col h-[calc(100vh-7rem)]">
       <div className="flex items-center justify-between mb-4 shrink-0">
-        <h1 className="text-xl font-bold">Ask Sensei</h1>
+        <h1 className="text-3xl font-heading font-semibold leading-tight">Ask Sensei</h1>
         <Button variant="outline" size="sm" onClick={handleNewConversation}>
           <Plus className="h-4 w-4 mr-1" />
           New conversation
