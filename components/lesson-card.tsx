@@ -10,10 +10,10 @@ interface LessonCardProps {
 export function LessonCard({ id, level, topic, chapter, status }: LessonCardProps) {
   return (
     <Link href={`/lessons/${id}`}>
-      <Card className="hover:bg-muted/50 cursor-pointer transition-colors">
-        <CardContent className="py-4 flex items-center justify-between">
+      <Card className="hover:bg-muted/50 cursor-pointer transition-colors border-l-4 border-primary">
+        <CardContent className="py-5 flex items-center justify-between">
           <div>
-            <p className="font-medium">{topic}</p>
+            <p className="font-medium font-heading">{topic}</p>
             <p className="text-xs text-muted-foreground">Chapter {chapter}</p>
           </div>
           <div className="flex items-center gap-2">

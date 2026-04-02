@@ -119,10 +119,10 @@ export function Sidebar() {
           const active = pathname.startsWith(href)
           return (
             <Link key={href} href={href}>
-              <span className={`flex items-center gap-2.5 h-9 px-3 rounded-md text-sm transition-colors cursor-pointer ${
+              <span className={`flex items-center gap-2.5 h-9 rounded-md text-sm transition-colors cursor-pointer ${
                 active
-                  ? 'bg-sidebar-accent text-sidebar-foreground font-medium'
-                  : 'text-sidebar-foreground/70 hover:bg-sidebar-accent/70 hover:text-sidebar-foreground'
+                  ? 'bg-sidebar-accent text-sidebar-foreground font-medium border-l-2 border-white/70 px-[10px]'
+                  : 'text-sidebar-foreground/70 hover:bg-sidebar-accent/70 hover:text-sidebar-foreground px-3'
               }`}>
                 <Icon className="h-4 w-4 shrink-0" />
                 {t.nav[href]}
