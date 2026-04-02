@@ -1,6 +1,8 @@
+'use client'
 import Link from 'next/link'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { useT } from '@/lib/i18n'
 
 interface LessonCardProps {
   id: number; level: string; topic: string; chapter: number
@@ -8,13 +10,14 @@ interface LessonCardProps {
 }
 
 export function LessonCard({ id, level, topic, chapter, status }: LessonCardProps) {
+  const t = useT()
   return (
     <Link href={`/lessons/${id}`}>
       <Card className="hover:bg-muted/50 cursor-pointer transition-colors border-l-4 border-primary">
         <CardContent className="py-5 flex items-center justify-between">
           <div>
             <p className="font-medium font-heading">{topic}</p>
-            <p className="text-xs text-muted-foreground">Chapter {chapter}</p>
+            <p className="text-xs text-muted-foreground">{t.chapter} {chapter}</p>
           </div>
           <div className="flex items-center gap-2">
             <Badge variant="outline" className="uppercase text-xs">{level}</Badge>

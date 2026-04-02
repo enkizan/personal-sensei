@@ -19,11 +19,11 @@ function levelStyle(index: number, total: number): CSSProperties {
   }
 }
 
-interface Lesson { id: number; level: string; topic: string; chapter: number }
+interface Lesson { id: number; level: string; topic: string; chapter: number; contentZh?: { title?: string } | null }
 interface ProgressRow { lesson_id: number; status: string }
 
 export default function LessonsPage() {
-  const { domain, mathLevelMode, currentStudent } = useApp()
+  const { domain, mathLevelMode, currentStudent, uiLang } = useApp()
   const t = useT()
   const { keys, labels: rawLabels } = getDomainLevels(domain, mathLevelMode)
   // For math, swap in translated labels; other domains keep their own label strings
@@ -67,10 +67,15 @@ export default function LessonsPage() {
           <TabsContent key={k} value={k} className="mt-4 space-y-2">
             {lessons.length === 0
               ? <p className="text-muted-foreground text-sm">{t.noLessons}</p>
-              : lessons.map(l => (
-                <LessonCard key={l.id} {...l}
-                  status={progressMap[l.id] as 'in_progress' | 'completed' | null ?? null} />
-              ))
+              : lessons.map(l => {
+                  const displayTopic = (domain === 'math' && uiLang === 'zh-TW' && l.contentZh?.title)
+                    ? l.contentZh.title
+                    : l.topic
+                  return (
+                    <LessonCard key={l.id} {...l} topic={displayTopic}
+                      status={progressMap[l.id] as 'in_progress' | 'completed' | null ?? null} />
+                  )
+                })
             }
           </TabsContent>
         ))}
