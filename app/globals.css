@@ -53,91 +53,96 @@
   --radius-xl:  calc(var(--radius) * 1.6);   /* 16px */
 }
 
-/* ── Light mode ────────────────────────────────────────────────────────────── */
+/* ── Dark mode (default) ───────────────────────────────────────────────────── */
 :root {
-  /* Page background — warm cream (matches original #F7F5F2) */
-  --background:             oklch(0.972 0.007 75);
-  --foreground:             oklch(0.149 0 0);        /* #1A1A1A near-black */
-
-  /* Cards are pure white on the warm background */
-  --card:                   oklch(1 0 0);
-  --card-foreground:        oklch(0.149 0 0);
-  --popover:                oklch(1 0 0);
-  --popover-foreground:     oklch(0.149 0 0);
-
-  /* Primary — rust/domain accent (overridden per-domain below) */
-  --primary:                oklch(0.52 0.185 28);    /* #C84B31 rust */
-  --primary-foreground:     oklch(0.985 0 0);
-
-  /* Secondary — surface-2 warm tan (original #F0EDE8) */
-  --secondary:              oklch(0.945 0.010 80);
-  --secondary-foreground:   oklch(0.149 0 0);
-
-  /* Muted — surface-3 slightly darker tan (original #E8E4DE) */
-  --muted:                  oklch(0.913 0.012 80);
-  --muted-foreground:       oklch(0.530 0 0);        /* #6B7280 */
-
-  /* Accent — same as secondary for hover states */
-  --accent:                 oklch(0.945 0.010 80);
-  --accent-foreground:      oklch(0.149 0 0);
-
-  /* Semantic */
-  --destructive:            oklch(0.498 0.220 27);   /* #B91C1C */
-  --success:                oklch(0.380 0.120 150);  /* #1B6B3A */
-  --success-bg:             oklch(0.940 0.040 150);
-  --warning:                oklch(0.480 0.130 60);   /* #92520A */
-  --warning-bg:             oklch(0.950 0.040 80);
-
-  /* Borders — warm, not cool-grey (original #E2DDD8) */
-  --border:                 oklch(0.893 0.012 80);
-  --input:                  oklch(0.893 0.012 80);
-  --ring:                   oklch(0.52 0.185 28);    /* follows --primary */
-
-  /* Border radius base */
-  --radius:                 0.625rem;                /* 10px */
-
-  /* ── Sidebar — always dark navy, domain-independent ─────────────────────
-     Original: #2D3561 background, white text, rgba overlay on hover         */
-  --sidebar:                      oklch(0.275 0.085 264);   /* #2D3561 navy */
-  --sidebar-foreground:           oklch(0.985 0 0);
-  --sidebar-primary:              oklch(0.52 0.185 28);     /* rust accent */
-  --sidebar-primary-foreground:   oklch(0.985 0 0);
-  --sidebar-accent:               oklch(0.330 0.075 264);   /* lighter navy hover */
-  --sidebar-accent-foreground:    oklch(0.985 0 0);
-  --sidebar-border:               oklch(1 0 0 / 12%);       /* subtle white divider */
-  --sidebar-ring:                 oklch(1 0 0 / 30%);
-}
-
-/* ── Dark mode ─────────────────────────────────────────────────────────────── */
-.dark {
-  --background:             oklch(0.145 0 0);
-  --foreground:             oklch(0.985 0 0);
-  --card:                   oklch(0.205 0 0);
-  --card-foreground:        oklch(0.985 0 0);
-  --popover:                oklch(0.205 0 0);
-  --popover-foreground:     oklch(0.985 0 0);
-  --primary:                oklch(0.60 0.180 28);    /* slightly brighter rust in dark */
-  --primary-foreground:     oklch(0.985 0 0);
-  --secondary:              oklch(0.269 0 0);
-  --secondary-foreground:   oklch(0.985 0 0);
-  --muted:                  oklch(0.269 0 0);
-  --muted-foreground:       oklch(0.708 0 0);
-  --accent:                 oklch(0.269 0 0);
-  --accent-foreground:      oklch(0.985 0 0);
+  --background:             oklch(0.18 0.02 264);
+  --foreground:             oklch(0.93 0.01 240);
+  --card:                   oklch(0.22 0.02 264);
+  --card-foreground:        oklch(0.93 0.01 240);
+  --popover:                oklch(0.22 0.02 264);
+  --popover-foreground:     oklch(0.93 0.01 240);
+  --primary:                oklch(0.72 0.14 80);
+  --primary-foreground:     oklch(0.15 0.03 80);
+  --secondary:              oklch(0.25 0.02 264);
+  --secondary-foreground:   oklch(0.93 0.01 240);
+  --muted:                  oklch(0.25 0.02 264);
+  --muted-foreground:       oklch(0.65 0.02 240);
+  --accent:                 oklch(0.25 0.02 264);
+  --accent-foreground:      oklch(0.93 0.01 240);
   --destructive:            oklch(0.704 0.191 22);
-  --border:                 oklch(1 0 0 / 10%);
-  --input:                  oklch(1 0 0 / 15%);
-  --ring:                   oklch(0.60 0.180 28);
+  --success:                oklch(0.380 0.120 150);
+  --success-bg:             oklch(0.200 0.040 150);
+  --warning:                oklch(0.720 0.140 80);
+  --warning-bg:             oklch(0.220 0.040 80);
+  --border:                 oklch(0.30 0.02 264);
+  --input:                  oklch(0.30 0.02 264);
+  --ring:                   oklch(0.72 0.14 80);
+  --radius:                 0.375rem;
 
-  /* Sidebar in dark mode — slightly darker navy so it reads against dark page */
   --sidebar:                      oklch(0.175 0.040 264);
   --sidebar-foreground:           oklch(0.985 0 0);
-  --sidebar-primary:              oklch(0.60 0.180 28);
-  --sidebar-primary-foreground:   oklch(0.985 0 0);
+  --sidebar-primary:              oklch(0.72 0.14 80);
+  --sidebar-primary-foreground:   oklch(0.15 0.03 80);
   --sidebar-accent:               oklch(0.230 0.050 264);
   --sidebar-accent-foreground:    oklch(0.985 0 0);
   --sidebar-border:               oklch(1 0 0 / 10%);
   --sidebar-ring:                 oklch(1 0 0 / 20%);
+}
+
+/* ── Dark class (mirrors :root — next-themes adds .dark to <html> when defaultTheme="dark") */
+.dark {
+  --background:             oklch(0.18 0.02 264);
+  --foreground:             oklch(0.93 0.01 240);
+  --card:                   oklch(0.22 0.02 264);
+  --card-foreground:        oklch(0.93 0.01 240);
+  --popover:                oklch(0.22 0.02 264);
+  --popover-foreground:     oklch(0.93 0.01 240);
+  --primary:                oklch(0.72 0.14 80);
+  --primary-foreground:     oklch(0.15 0.03 80);
+  --secondary:              oklch(0.25 0.02 264);
+  --secondary-foreground:   oklch(0.93 0.01 240);
+  --muted:                  oklch(0.25 0.02 264);
+  --muted-foreground:       oklch(0.65 0.02 240);
+  --accent:                 oklch(0.25 0.02 264);
+  --accent-foreground:      oklch(0.93 0.01 240);
+  --destructive:            oklch(0.704 0.191 22);
+  --border:                 oklch(0.30 0.02 264);
+  --input:                  oklch(0.30 0.02 264);
+  --ring:                   oklch(0.72 0.14 80);
+  --sidebar:                      oklch(0.175 0.040 264);
+  --sidebar-foreground:           oklch(0.985 0 0);
+  --sidebar-primary:              oklch(0.72 0.14 80);
+  --sidebar-primary-foreground:   oklch(0.15 0.03 80);
+  --sidebar-accent:               oklch(0.230 0.050 264);
+  --sidebar-accent-foreground:    oklch(0.985 0 0);
+  --sidebar-border:               oklch(1 0 0 / 10%);
+  --sidebar-ring:                 oklch(1 0 0 / 20%);
+}
+
+/* ── Light mode (opt-in via toggle) ───────────────────────────────────────── */
+.light {
+  --background:             oklch(0.972 0.007 75);
+  --foreground:             oklch(0.149 0 0);
+  --card:                   oklch(1 0 0);
+  --card-foreground:        oklch(0.149 0 0);
+  --popover:                oklch(1 0 0);
+  --popover-foreground:     oklch(0.149 0 0);
+  --primary:                oklch(0.58 0.14 80);
+  --primary-foreground:     oklch(0.985 0 0);
+  --secondary:              oklch(0.945 0.010 80);
+  --secondary-foreground:   oklch(0.149 0 0);
+  --muted:                  oklch(0.913 0.012 80);
+  --muted-foreground:       oklch(0.530 0 0);
+  --accent:                 oklch(0.945 0.010 80);
+  --accent-foreground:      oklch(0.149 0 0);
+  --destructive:            oklch(0.498 0.220 27);
+  --success:                oklch(0.380 0.120 150);
+  --success-bg:             oklch(0.940 0.040 150);
+  --warning:                oklch(0.480 0.130 60);
+  --warning-bg:             oklch(0.950 0.040 80);
+  --border:                 oklch(0.893 0.012 80);
+  --input:                  oklch(0.893 0.012 80);
+  --ring:                   oklch(0.58 0.14 80);
 }
 
 /* ── Base styles ───────────────────────────────────────────────────────────── */
@@ -154,41 +159,26 @@
   }
 }
 
-/* ── Domain theming ─────────────────────────────────────────────────────────
-   Overrides --primary (and --ring) so every Button, Badge, Ring picks up
-   the domain accent. Sidebar stays navy — only the content area is affected.
-   data-domain is set server-side in (app)/layout.tsx and updated client-side
-   by AppContext on domain switch.
+/* ── Domain theming — sidebar only ─────────────────────────────────────────
+   Domain color survives only on the sidebar kanji badge.
+   --primary in the content area is always gold.
 ──────────────────────────────────────────────────────────────────────────── */
 [data-domain="japanese"] {
-  --primary: oklch(0.52 0.185 28);      /* #C84B31 rust red */
-  --primary-foreground: oklch(0.985 0 0);
-  --ring: oklch(0.52 0.185 28);
+  --sidebar-primary: oklch(0.52 0.185 28);
+  --sidebar-ring:    oklch(0.52 0.185 28);
 }
-
 [data-domain="english"] {
-  --primary: oklch(0.52 0.190 247);     /* #1E88E5 blue */
-  --primary-foreground: oklch(0.985 0 0);
-  --ring: oklch(0.52 0.190 247);
+  --sidebar-primary: oklch(0.52 0.190 247);
+  --sidebar-ring:    oklch(0.52 0.190 247);
 }
-
 [data-domain="french"] {
-  --primary: oklch(0.48 0.170 275);     /* indigo — distinct from English blue */
-  --primary-foreground: oklch(0.985 0 0);
-  --ring: oklch(0.48 0.170 275);
+  --sidebar-primary: oklch(0.48 0.170 275);
+  --sidebar-ring:    oklch(0.48 0.170 275);
 }
-
 [data-domain="math"] {
-  --primary: oklch(0.50 0.150 148);     /* #43A047 green */
-  --primary-foreground: oklch(0.985 0 0);
-  --ring: oklch(0.50 0.150 148);
+  --sidebar-primary: oklch(0.50 0.150 148);
+  --sidebar-ring:    oklch(0.50 0.150 148);
 }
-
-/* Dark mode domain overrides — brighter for contrast on dark bg */
-.dark [data-domain="japanese"] { --primary: oklch(0.60 0.180 28); }
-.dark [data-domain="english"]  { --primary: oklch(0.62 0.185 247); }
-.dark [data-domain="french"]   { --primary: oklch(0.62 0.165 275); }
-.dark [data-domain="math"]     { --primary: oklch(0.60 0.145 148); }
 
 /* ── Japanese text ──────────────────────────────────────────────────────── */
 .font-jp { font-family: var(--font-jp); }
