@@ -3,9 +3,10 @@ import { generateObject } from 'ai'
 import { createAnthropic } from '@ai-sdk/anthropic'
 import { db } from '@/lib/db'
 import { lessons } from '@/lib/db/schema'
-import { lessonSchema } from '@/lib/ai/schemas'
+import { lessonSchema, MathLessonSchema } from '@/lib/ai/schemas'
 import { lessonPrompt } from '@/lib/ai/prompts'
 import type { Domain } from '@/lib/domains'
+import { eq } from 'drizzle-orm'
 
 const anthropic = createAnthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
 
@@ -28,6 +29,30 @@ export async function POST(req: Request) {
       level, chapter, topic: storedTopic, domain,
       content: object,
     }).returning()
+
+    // For math, immediately generate a Traditional Chinese translation
+    if (domain === 'math') {
+      try {
+        const { object: zhObject } = await generateObject({
+          model:           anthropic('claude-sonnet-4-6'),
+          schema:          MathLessonSchema,
+          prompt:          `Translate this English math lesson to Traditional Chinese (繁體中文).
+Rules:
+- Translate ALL text: title, content, concept names, definitions, examples, problem descriptions, solution text, step text, quiz questions, quiz options, quiz explanations, tips
+- Keep all mathematical formulas, equations, symbols, and numbers EXACTLY as they appear — do not translate them
+- Output must match the same JSON structure
+
+Lesson to translate:
+${JSON.stringify(object)}`,
+          maxOutputTokens: 4096,
+        })
+        await db.update(lessons)
+          .set({ contentZh: zhObject })
+          .where(eq(lessons.id, rows[0].id))
+      } catch {
+        // ZH generation failure is non-fatal — lesson is still usable in English
+      }
+    }
 
     return NextResponse.json(rows[0], { status: 201 })
   } catch (err: unknown) {
