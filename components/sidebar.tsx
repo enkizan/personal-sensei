@@ -5,8 +5,9 @@ import { useTheme } from 'next-themes'
 import { useApp } from '@/app/context'
 import { DomainPicker } from './domain-picker'
 import { StudentPicker } from './student-picker'
+import { GenerateModal } from './generate-modal'
 import { DOMAINS } from '@/lib/domains'
-import { Sun, Moon, LayoutDashboard, BookOpen, MessageCircle, BarChart2, Settings, Home, Languages } from 'lucide-react'
+import { Sun, Moon, LayoutDashboard, BookOpen, MessageCircle, BarChart2, Home, Languages, BookPlus } from 'lucide-react'
 import { useState, useEffect } from 'react'
 
 // Kanji badge characters per domain — mirrors the original brand-kanji style
@@ -25,7 +26,6 @@ const T = {
       '/lessons':   'Lessons',
       '/chat':      'Ask Sensei',
       '/progress':  'Progress',
-      '/admin':     'Admin',
     },
     lightMode:     'Light mode',
     darkMode:      'Dark mode',
@@ -38,7 +38,6 @@ const T = {
       '/lessons':   '課程',
       '/chat':      '問老師',
       '/progress':  '進度',
-      '/admin':     '管理',
     },
     lightMode:     '淺色模式',
     darkMode:      '深色模式',
@@ -51,14 +50,14 @@ const NAV = [
   { href: '/lessons',   Icon: BookOpen },
   { href: '/chat',      Icon: MessageCircle },
   { href: '/progress',  Icon: BarChart2 },
-  { href: '/admin',     Icon: Settings },
 ] as const
 
 export function Sidebar() {
   const pathname = usePathname()
   const { theme, setTheme } = useTheme()
   const { currentStudent, domain, homeDomain, setHomeDomain, uiLang, toggleUiLang } = useApp()
-  const [pickerOpen, setPickerOpen] = useState(false)
+  const [pickerOpen,    setPickerOpen]    = useState(false)
+  const [generateOpen,  setGenerateOpen]  = useState(false)
   const [mounted, setMounted] = useState(false)
   useEffect(() => setMounted(true), [])
   const t = T[uiLang]
@@ -79,6 +78,14 @@ export function Sidebar() {
             </div>
             <div className="text-xs text-sidebar-foreground/60 mt-0.5">{t.learning}</div>
           </div>
+          {/* Generate lesson */}
+          <button
+            onClick={() => setGenerateOpen(true)}
+            title={uiLang === 'en' ? 'Generate lesson' : '製作課程'}
+            className="shrink-0 transition-colors cursor-pointer text-sidebar-foreground/30 hover:text-primary"
+          >
+            <BookPlus className="h-4 w-4" />
+          </button>
           {/* UI language toggle */}
           <button
             onClick={toggleUiLang}
@@ -157,7 +164,8 @@ export function Sidebar() {
         </button>
       </div>
 
-      <StudentPicker open={pickerOpen} onClose={() => setPickerOpen(false)} />
+      <StudentPicker  open={pickerOpen}   onClose={() => setPickerOpen(false)} />
+      <GenerateModal  open={generateOpen} onClose={() => setGenerateOpen(false)} />
     </aside>
   )
 }
