@@ -4,8 +4,10 @@ import { useApp } from '@/app/context'
 import { getDomainLevels } from '@/lib/domains'
 import { LessonCard } from '@/components/lesson-card'
 import { MathLevelToggle } from '@/components/math-level-toggle'
+import { GenerateModal } from '@/components/generate-modal'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import { useT, translateMathLabels } from '@/lib/i18n'
+import { BookPlus } from 'lucide-react'
 
 function levelStyle(index: number, total: number): CSSProperties {
   const t = total <= 1 ? 0 : index / (total - 1)
@@ -28,9 +30,10 @@ export default function LessonsPage() {
   const { keys, labels: rawLabels } = getDomainLevels(domain, mathLevelMode)
   // For math, swap in translated labels; other domains keep their own label strings
   const labels = domain === 'math' ? translateMathLabels(mathLevelMode, t) : rawLabels
-  const [lessons,     setLessons]     = useState<Lesson[]>([])
-  const [progressMap, setProgressMap] = useState<Record<number, string>>({})
-  const [activeLevel, setActiveLevel] = useState(keys[0])
+  const [lessons,       setLessons]       = useState<Lesson[]>([])
+  const [progressMap,   setProgressMap]   = useState<Record<number, string>>({})
+  const [activeLevel,   setActiveLevel]   = useState(keys[0])
+  const [generateOpen,  setGenerateOpen]  = useState(false)
 
   useEffect(() => {
     setActiveLevel(keys[0])
@@ -55,7 +58,17 @@ export default function LessonsPage() {
 
   return (
     <div className="max-w-3xl space-y-10">
-      <h1 className="text-3xl font-heading font-semibold leading-tight">{t.lessonsHeading}</h1>
+      <div className="flex items-center justify-between">
+        <h1 className="text-3xl font-heading font-semibold leading-tight">{t.lessonsHeading}</h1>
+        <button
+          onClick={() => setGenerateOpen(true)}
+          title={uiLang === 'en' ? 'Generate lesson' : '製作課程'}
+          className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary transition-colors cursor-pointer"
+        >
+          <BookPlus className="h-4 w-4" />
+          {uiLang === 'en' ? 'Generate' : '製作'}
+        </button>
+      </div>
       {domain === 'math' && <MathLevelToggle />}
       <Tabs value={activeLevel} onValueChange={loadLevel}>
         <TabsList className="flex-wrap h-auto gap-1">
@@ -80,6 +93,7 @@ export default function LessonsPage() {
           </TabsContent>
         ))}
       </Tabs>
+      <GenerateModal open={generateOpen} onClose={() => setGenerateOpen(false)} />
     </div>
   )
 }
