@@ -11,13 +11,17 @@ export async function POST(req: Request) {
     domain        = 'japanese',
     studentName   = 'Student',
     lessonContext = '',
+    commandPrompt = '',
   } = await req.json()
 
   const modelMessages = await convertToModelMessages((messages as UIMessage[]).slice(-50))
 
+  const system = chatSystem(domain as Domain, studentName, lessonContext)
+    + (commandPrompt ? `\n\n---\nCommand instructions:\n${commandPrompt}` : '')
+
   const result = streamText({
     model:           anthropic('claude-haiku-4-5-20251001'),
-    system:          chatSystem(domain as Domain, studentName, lessonContext),
+    system,
     messages:        modelMessages,
     maxOutputTokens: 1024,
   })
