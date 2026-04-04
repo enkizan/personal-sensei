@@ -6,7 +6,7 @@ import { useApp } from '@/app/context'
 import { DomainPicker } from './domain-picker'
 import { StudentPicker } from './student-picker'
 import { DOMAINS } from '@/lib/domains'
-import { Sun, Moon, LayoutDashboard, BookOpen, MessageCircle, BarChart2, Home, Languages } from 'lucide-react'
+import { Sun, Moon, LayoutDashboard, BookOpen, MessageCircle, BarChart2, Home, Languages, Terminal } from 'lucide-react'
 import { useState, useEffect } from 'react'
 
 // Kanji badge characters per domain — mirrors the original brand-kanji style
@@ -24,6 +24,7 @@ const T = {
       '/dashboard': 'Dashboard',
       '/lessons':   'Lessons',
       '/chat':      'Ask Sensei',
+      '/commands':  'Commands',
       '/progress':  'Progress',
     },
     lightMode:     'Light mode',
@@ -36,6 +37,7 @@ const T = {
       '/dashboard': '儀表板',
       '/lessons':   '課程',
       '/chat':      '問老師',
+      '/commands':  '指令',
       '/progress':  '進度',
     },
     lightMode:     '淺色模式',
@@ -48,6 +50,7 @@ const NAV = [
   { href: '/dashboard', Icon: LayoutDashboard },
   { href: '/lessons',   Icon: BookOpen },
   { href: '/chat',      Icon: MessageCircle },
+  { href: '/commands',  Icon: Terminal },
   { href: '/progress',  Icon: BarChart2 },
 ] as const
 
