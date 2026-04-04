@@ -53,8 +53,20 @@ export const chatMessages = pgTable('chat_messages', {
   created_at:      timestamp('created_at').defaultNow(),
 })
 
+export const chatCommands = pgTable('chat_commands', {
+  id:           serial('id').primaryKey(),
+  student_id:   integer('student_id').notNull().references(() => students.id),
+  command_name: text('command_name').notNull(),  // without slash, e.g. "polish"
+  description:  text('description').notNull(),
+  prompt:       text('prompt').notNull(),
+  created_at:   timestamp('created_at').defaultNow(),
+}, t => ({
+  uniq: unique().on(t.student_id, t.command_name),
+}))
+
 export type Student          = typeof students.$inferSelect
 export type Lesson           = typeof lessons.$inferSelect
 export type Progress         = typeof progress.$inferSelect
 export type ChatConversation = typeof chatConversations.$inferSelect
 export type ChatMessage      = typeof chatMessages.$inferSelect
+export type ChatCommand      = typeof chatCommands.$inferSelect
